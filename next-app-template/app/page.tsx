@@ -26,7 +26,7 @@ export default function HomePage() {
             size="lg"
             variant="light"
           >
-            더 알아보기
+            메뉴
           </Button>
         </Group>
       </Stack>

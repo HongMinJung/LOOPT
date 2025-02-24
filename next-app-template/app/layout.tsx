@@ -1,26 +1,23 @@
 import '@mantine/core/styles.css';
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
-import { theme } from '../theme';
-import { AppShell } from '@/components/layout/AppShell';
-import { StudyRoomProvider } from '@/contexts/StudyRoomContext';
+import { MantineClientProvider } from '@/components/providers/MantineClientProvider';
 
 export const metadata = {
   title: 'LOOPT - 스터디 관리 플랫폼',
   description: '위치 기반 스터디 관리 플랫폼',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="ko">
-      <head>
-        <ColorSchemeScript />
-      </head>
+      <head />
       <body>
-        <MantineProvider theme={theme}>
-          <StudyRoomProvider>
-            <AppShell>{children}</AppShell>
-          </StudyRoomProvider>
-        </MantineProvider>
+        <MantineClientProvider>
+          {children}
+        </MantineClientProvider>
       </body>
     </html>
   );
