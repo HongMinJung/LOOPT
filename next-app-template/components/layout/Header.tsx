@@ -4,7 +4,17 @@ import { Group, Text, Button, ActionIcon } from '@mantine/core';
 import { IconSun, IconMoonStars } from '@tabler/icons-react';
 import { useMantineColorScheme } from '@mantine/core';
 import Link from 'next/link';
-
+const buttonlist = [
+  {
+    path: "/login",
+    label: "로그인",
+    variant: "default"  // 로그인 버튼에만 default variant 적용
+  },
+  {
+    path: "/signup",
+    label: "회원가입"
+  },
+];
 export function Header() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
@@ -24,12 +34,16 @@ export function Header() {
         >
           {colorScheme === 'dark' ? <IconSun size={18} /> : <IconMoonStars size={18} />}
         </ActionIcon>
-        <Button component={Link} href="/login" variant="default">
-          로그인
-        </Button>
-        <Button component={Link} href="/signup">
-          회원가입
-        </Button>
+        {buttonlist.map((button, index) => (
+          <Button
+            key={index}
+            component={Link}
+            href={button.path}
+            variant={button.variant}
+          >
+            {button.label}
+          </Button>
+        ))}
       </Group>
     </Group>
   );
