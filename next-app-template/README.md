@@ -35,3 +35,6 @@ This template comes with the following features:
 - `storybook` – starts storybook dev server
 - `storybook:build` – build production storybook bundle to `storybook-static`
 - `prettier:write` – formats all files with Prettier
+
+### Figma
+-https://www.figma.com/design/bJgXHgwFOU4bmixBdgazUn/Untitled?node-id=0-1&t=NzeDNazUJDttyi2Y-1

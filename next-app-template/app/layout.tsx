@@ -1,27 +1,23 @@
 import '@mantine/core/styles.css';
-
-import React from 'react';
-import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
-import { theme } from '../theme';
+import { MantineClientProvider } from '@/components/providers/MantineClientProvider';
 
 export const metadata = {
-  title: 'Mantine Next.js template',
-  description: 'I am using Mantine with Next.js!',
+  title: 'LOOPT - 스터디 관리 플랫폼',
+  description: '위치 기반 스터디 관리 플랫폼',
 };
 
-export default function RootLayout({ children }: { children: any }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" {...mantineHtmlProps}>
-      <head>
-        <ColorSchemeScript />
-        <link rel="shortcut icon" href="/favicon.svg" />
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
-        />
-      </head>
+    <html lang="ko">
+      <head />
       <body>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <MantineClientProvider>
+          {children}
+        </MantineClientProvider>
       </body>
     </html>
   );
