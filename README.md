@@ -1,5 +1,8 @@
 # LOOPT 프로젝트 일정표
 
+## Figma
+- https://www.figma.com/design/bJgXHgwFOU4bmixBdgazUn/Untitled?node-id=0-1&t=NzeDNazUJDttyi2Y-1
+
 ## Week 1 (프로젝트 초기 설정 및 기본 기능)
 
 ### 1주차 Day 1-2: 초기 셋업
