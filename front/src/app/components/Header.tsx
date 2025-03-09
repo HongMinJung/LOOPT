@@ -39,7 +39,7 @@ export default function Header() {
                 <div className="flex justify-between h-16 items-center">
                     {/* 로고 */}
                     <div className="flex-shrink-0">
-                        <Link href="/study-room" className="text-blue-500 text-2xl font-bold">
+                        <Link href="/" className="text-blue-500 text-2xl font-bold">
                             LOOPT
                         </Link>
                     </div>
