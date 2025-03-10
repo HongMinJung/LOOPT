@@ -3,7 +3,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 interface User {
     name: string;
@@ -14,7 +13,6 @@ interface User {
 export default function Header() {
     const [searchQuery, setSearchQuery] = useState('');
     const [user, setUser] = useState<User | null>(null);
-    const pathname = usePathname();
 
     // 임시 로그인 시뮬레이션
     useEffect(() => {
