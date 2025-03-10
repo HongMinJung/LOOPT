@@ -6,6 +6,14 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
+
+    const activity = [
+        { id: 1, type: 'join', user: '홍길동', target: '리액트 마스터 클래스', time: '10분 전' },
+        { id: 2, type: 'comment', user: '김철수', target: '알고리즘 스터디', time: '1시간 전' },
+        { id: 3, type: 'complete', user: '이영희', target: '자바스크립트 과제 3', time: '3시간 전' },
+        { id: 4, type: 'schedule', user: '관리자', target: '정기 미팅', time: '어제' },
+        { id: 5, type: 'join', user: '박민수', target: '파이썬 데이터 분석', time: '어제' },
+    ];
     return (
         <div className="space-y-8">
             <div className="flex items-center justify-between">
@@ -62,13 +70,7 @@ export default function DashboardPage() {
                 <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                     <h3 className="text-lg font-medium mb-4">최근 활동</h3>
                     <div className="space-y-4">
-                        {[
-                            { id: 1, type: 'join', user: '홍길동', target: '리액트 마스터 클래스', time: '10분 전' },
-                            { id: 2, type: 'comment', user: '김철수', target: '알고리즘 스터디', time: '1시간 전' },
-                            { id: 3, type: 'complete', user: '이영희', target: '자바스크립트 과제 3', time: '3시간 전' },
-                            { id: 4, type: 'schedule', user: '관리자', target: '정기 미팅', time: '어제' },
-                            { id: 5, type: 'join', user: '박민수', target: '파이썬 데이터 분석', time: '어제' },
-                        ].map(activity => (
+                        {activity.map(activity => (
                             <div key={activity.id} className="flex items-start pb-4 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0">
                                 <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300 flex items-center justify-center mr-3">
                                     {activity.type === 'join' && '👋'}
