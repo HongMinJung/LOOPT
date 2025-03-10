@@ -1,11 +1,9 @@
-// app/layout.tsx - 루트 레이아웃
+// app/layout.tsx
 import './globals.css';
-import { Inter } from 'next/font/google';
+import { pretendard } from '@/app/fonts';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { Metadata } from 'next';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'LOOPT - 스터디 플랫폼',
@@ -18,14 +16,14 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-      <html lang="ko" suppressHydrationWarning>
-      <body className={inter.className}>
-      <ThemeProvider>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
-      </ThemeProvider>
+    <html lang="ko" suppressHydrationWarning>
+      <body className={pretendard.className}>
+        <ThemeProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ThemeProvider>
       </body>
-      </html>
+    </html>
   );
 }
