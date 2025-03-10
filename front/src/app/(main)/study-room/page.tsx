@@ -2,6 +2,8 @@
 
 import {useState} from "react";
 import {cn} from "@/lib/utils";
+import {Map} from 'lucide-react';
+import {useRouter} from "next/navigation";
 
 interface StudyRoom {
     id: number;
@@ -9,6 +11,7 @@ interface StudyRoom {
     title: string;
     description: string;
     createdBy: string;
+    address: string;
     members: number;
     maxMembers: number;
     views: number;
@@ -17,7 +20,7 @@ interface StudyRoom {
 }
 
 export default function StudyRoomPage() {
-
+    const router = useRouter();
     // 샘플데이터
     const [studyRooms, setStudyRooms] = useState<StudyRoom[]>([
         /*
@@ -39,6 +42,7 @@ export default function StudyRoomPage() {
             title: '알로리즘 스터디',
             description: '매주 알고리즘 문제를 함께 풀고 토론하는 스터디입니다.',
             createdBy: '도레미',
+            address: '강남구 논현동',
             members: 2,
             maxMembers: 1000,
             views: 130,
@@ -50,6 +54,7 @@ export default function StudyRoomPage() {
             title: '알로리즘 스터디',
             description: '매주 알고리즘 문제를 함께 풀고 토론하는 스터디입니다.',
             createdBy: '도레미',
+            address: '강남구 논현동',
             members: 2,
             maxMembers: 1000,
             views: 130,
@@ -62,6 +67,7 @@ export default function StudyRoomPage() {
             title: '알로리즘 스터디',
             description: '매주 알고리즘 문제를 함께 풀고 토론하는 스터디입니다.',
             createdBy: '도레미',
+            address: '강남구 논현동',
             members: 2,
             maxMembers: 1000,
             views: 130,
@@ -73,6 +79,7 @@ export default function StudyRoomPage() {
             title: '알로리즘 스터디',
             description: '매주 알고리즘 문제를 함께 풀고 토론하는 스터디입니다.',
             createdBy: '도레미',
+            address: '강남구 논현동',
             members: 2,
             maxMembers: 1000,
             views: 130,
@@ -84,6 +91,7 @@ export default function StudyRoomPage() {
             title: '알로리즘 스터디',
             description: '매주 알고리즘 문제를 함께 풀고 토론하는 스터디입니다.',
             createdBy: '도레미',
+            address: '강남구 논현동',
             members: 2,
             maxMembers: 1000,
             views: 130,
@@ -95,6 +103,7 @@ export default function StudyRoomPage() {
             title: '알로리즘 스터디',
             description: '매주 알고리즘 문제를 함께 풀고 토론하는 스터디입니다.',
             createdBy: '도레미',
+            address: '강남구 논현동',
             members: 2,
             maxMembers: 1000,
             views: 130,
@@ -108,6 +117,10 @@ export default function StudyRoomPage() {
     const handleShare = (id: number) => {
         console.log('id', id)
     }
+
+    const navigateToStudyDetail = (id: number) => {
+        router.push(`/study-room/${id}`);
+    };
     return (
         <div className="space-y-6">
             <div className={cn(
@@ -150,8 +163,8 @@ export default function StudyRoomPage() {
                                 'px-2',
                                 'py-1',
                                 'text-xs',
-                                'bg-blue-100',
-                                'text-blue-600',
+                                'bg-blue-700',
+                                'text-white',
                                 'rounded-md'
                             )}>
                                 {study.type}
@@ -201,6 +214,84 @@ export default function StudyRoomPage() {
                         )}>
                             {study.description}
                         </p>
+                        <div className={cn(
+                            'flex',
+                            'items-center',
+                            'text-sm',
+                            'text-gray-500',
+                            'mb-4'
+                        )}>
+                            <div className={cn(
+                                'flex',
+                                'items-center',
+                                'mr-4'
+                            )}>
+                                <Map/>
+                                <span>{study.address}</span>
+                            </div>
+                            <div className={cn(
+                                'flex',
+                                'items-center',
+                                'mr-4'
+                            )}>
+                                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                <span>{study.members}/{study.maxMembers}</span>
+                            </div>
+                            <div className={cn(
+                                'flex',
+                                'items-center',
+                            )}>
+                                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                <span>{study.views}</span>
+                            </div>
+                        </div>
+                        <div className={cn(
+                            'flex',
+                            'flex-wrap',
+                            'gap-2',
+                            'mb-4'
+                        )}>
+                            {study.tags.map((tag, index) => (
+                                <span key={index} className={cn(
+                                    'px-2',
+                                    'py-1',
+                                    'text-xs',
+                                    'rounded-md',
+                                    'border',
+                                    'border-gray-200',
+                                    'text-gray-600'
+                                )}>
+                                    #{tag}
+                                </span>
+                            ))}
+                        </div>
+                        <button
+                            className={cn(
+                                'w-full',
+                                'py-2',
+                                'text-center',
+                                'bg-blue-50',
+                                'text-blue-700',
+                                'font-medium',
+                                'rounded-md',
+                                'hover:text-white',
+                                'hover:bg-blue-600',
+                                'transition-colors'
+                            )}
+                            onClick={() => navigateToStudyDetail(study.id)}
+                        >
+                            스터디 보러가기
+                        </button>
                     </div>
                 ))}
             </div>
