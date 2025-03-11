@@ -29,7 +29,7 @@ const StudyRoomSection: FC<StudyRoomSectionProps> = ({ menuItems }) => {
                         <Link
                             href={item.href}
                             className={`flex items-center px-6 py-3 text-sm hover:bg-gray-100 ${
-                                pathname === item.href ? 'bg-blue-100 text-blue-600 font-medium' : 'text-gray-700'
+                                pathname === item.href ? 'bg-blue-100 text-blue-600 font-medium  hover:bg-blue-100' : 'text-gray-700 '
                             }`}
                         >
               <span className={`mr-3 ${pathname === item.href ? 'text-blue-600' : 'text-gray-500'}`}>

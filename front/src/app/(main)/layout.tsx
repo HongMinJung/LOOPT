@@ -20,7 +20,7 @@ export default function MainLayout({
                     {/* 사이드바 고정: 헤더 높이(4rem)를 제외한 전체 높이로 설정 */}
                     <Sidebar />
                 </div>
-                <div className="ml-64 flex-1 w-full"> {/* 사이드바 너비에 맞게 margin 추가 (예: 사이드바가 64px 너비면 ml-64) */}
+                <div className="bg-white ml-64 flex-1 w-full"> {/* 사이드바 너비에 맞게 margin 추가 (예: 사이드바가 64px 너비면 ml-64) */}
                 {/*<div className="ml-64"> /!* 사이드바 너비에 맞게 margin 추가 (예: 사이드바가 64px 너비면 ml-64) *!/*/}
                     <main className="p-6 overflow-auto transition-all duration-200">
                         {children}
