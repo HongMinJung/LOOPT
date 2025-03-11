@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { signIn } from 'next-auth/react';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -13,19 +13,42 @@ export default function LoginPage() {
     const [rememberMe, setRememberMe] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        setError('');
 
         try {
-            // 실제 로그인 로직은 여기에 구현
-            await new Promise(resolve => setTimeout(resolve, 1000)); // 모의 API 호출
-            router.push('/dashboard');
+            // Next-Auth를 사용한 로그인 구현
+            const result = await signIn('credentials', {
+                redirect: false,
+                email,
+                password,
+                callbackUrl: '/dashboard'
+            });
+
+            if (result?.error) {
+                setError('이메일 또는 비밀번호가 올바르지 않습니다.');
+            } else if (result?.url) {
+                router.push(result.url);
+            }
         } catch (error) {
             console.error('로그인 에러:', error);
+            setError('로그인 중 오류가 발생했습니다.');
         } finally {
             setLoading(false);
+        }
+    };
+
+    // 소셜 로그인 처리 함수
+    const handleSocialLogin = async (provider: string) => {
+        setLoading(true);
+        try {
+            await signIn(provider, { callbackUrl: '/dashboard' });
+        } catch (error) {
+            console.error(`${provider} 로그인 에러:`, error);
         }
     };
 
@@ -37,6 +60,13 @@ export default function LoginPage() {
                     <h1 className="text-3xl font-bold text-blue-500">LOOPT</h1>
                     <p className="mt-2 text-sm text-gray-500">LOOPT와 함께 성장하세요.</p>
                 </div>
+
+                {/* 에러 메시지 */}
+                {error && (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+                        <p className="text-sm text-red-600">{error}</p>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="mt-8 space-y-5">
                     {/* 이메일 입력 */}
@@ -123,7 +153,11 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                                loading
+                                    ? 'bg-gray-400 cursor-not-allowed'
+                                    : 'bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+                            }`}
                         >
                             {loading ? '로그인 중...' : '로그인'}
                         </button>
@@ -160,6 +194,7 @@ export default function LoginPage() {
                         <button
                             className="flex justify-center items-center p-2 border-0"
                             aria-label="Facebook 로그인"
+                            onClick={() => handleSocialLogin('facebook')}
                         >
                             <svg className="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/>
@@ -168,6 +203,7 @@ export default function LoginPage() {
                         <button
                             className="flex justify-center items-center p-2 border-0"
                             aria-label="Apple 로그인"
+                            onClick={() => handleSocialLogin('apple')}
                         >
                             <svg className="w-6 h-6 text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M22 17.607c-.786 2.28-3.139 6.317-5.563 6.361-1.608.031-2.125-.953-3.963-.953-1.837 0-2.412.923-3.932.983-2.572.099-6.542-5.827-6.542-10.995 0-4.747 3.308-7.1 6.198-7.143 1.55-.028 3.014 1.045 3.959 1.045.949 0 2.727-1.29 4.596-1.101.782.033 2.979.315 4.389 2.377-3.741 2.442-3.158 7.549.858 9.426zm-5.222-17.607c-2.826.114-5.132 3.079-4.81 5.531 2.612.203 5.118-2.725 4.81-5.531z"/>
@@ -176,6 +212,7 @@ export default function LoginPage() {
                         <button
                             className="flex justify-center items-center p-2 border-0"
                             aria-label="Google 로그인"
+                            onClick={() => handleSocialLogin('google')}
                         >
                             <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115Z"/>
@@ -187,6 +224,7 @@ export default function LoginPage() {
                         <button
                             className="flex justify-center items-center p-2 border-0"
                             aria-label="Twitter 로그인"
+                            onClick={() => handleSocialLogin('twitter')}
                         >
                             <svg className="w-6 h-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
