@@ -4,14 +4,22 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+
+interface FindEmailResult {
+    email: string;
+    joinDate: string;
+}
 
 export default function FindEmailPage() {
-    const router = useRouter();
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<{ email: string; date: string } | null>(null);
+    const [result, setResult] = useState<FindEmailResult | null>(null);
     const [error, setError] = useState('');
+
+    // Supabase 클라이언트 초기화
+    const supabase = createClientComponentClient();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,20 +27,44 @@ export default function FindEmailPage() {
         setError('');
 
         try {
-            // 실제 이메일 찾기 로직은 여기에 구현
-            // 지금은 모의 응답을 반환합니다
-            await new Promise(resolve => setTimeout(resolve, 1000)); // 모의 API 호출
+            // Supabase에서 사용자 찾기
+            // 참고: 기본 Auth 시스템은 전화번호로 직접 사용자를 찾는 기능이 없음
+            // 따라서 users 테이블에서 조회해야 함
+            const { data, error: searchError } = await supabase
+                .from('users')
+                .select('email, join_date')
+                .eq('name', name)
+                .eq('phone', phone.replace(/-/g, '')) // 하이픈 제거하여 검색
+                .single();
 
-            // 모의 결과: 실제로는 API 응답에서 가져옵니다
+            if (searchError || !data) {
+                throw new Error('일치하는 정보를 찾을 수 없습니다.');
+            }
+
+            // 이메일 일부를 마스킹 처리
+            const maskedEmail = maskEmail(data.email);
+
             setResult({
-                email: 'ex***@example.com', // 일부 가려진 이메일
-                date: new Date().toLocaleDateString() // 가입일
+                email: maskedEmail,
+                joinDate: new Date(data.join_date).toLocaleDateString()
             });
         } catch (err: any) {
             setError(err.message || '이메일을 찾는 중 오류가 발생했습니다');
         } finally {
             setLoading(false);
         }
+    };
+
+    // 이메일 마스킹 함수 (예: example@gmail.com -> exa***@gmail.com)
+    const maskEmail = (email: string) => {
+        const [localPart, domain] = email.split('@');
+        let maskedLocalPart = localPart;
+
+        if (localPart.length > 3) {
+            maskedLocalPart = localPart.substring(0, 3) + '*'.repeat(localPart.length - 3);
+        }
+
+        return `${maskedLocalPart}@${domain}`;
     };
 
     // 전화번호 형식화 (010-1234-5678)
@@ -69,7 +101,7 @@ export default function FindEmailPage() {
                                 <span className="font-medium">이메일:</span> {result.email}
                             </p>
                             <p className="text-sm">
-                                <span className="font-medium">가입일:</span> {result.date}
+                                <span className="font-medium">가입일:</span> {result.joinDate}
                             </p>
                         </div>
                         <div className="flex justify-center space-x-4 mt-6">
@@ -137,7 +169,11 @@ export default function FindEmailPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                                    loading
+                                        ? 'bg-gray-400 cursor-not-allowed'
+                                        : 'bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+                                }`}
                             >
                                 {loading ? '처리 중...' : '이메일 찾기'}
                             </button>

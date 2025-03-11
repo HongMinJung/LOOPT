@@ -4,13 +4,16 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function ForgotPasswordPage() {
-    const router = useRouter();
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
+
+    // Supabase 클라이언트 생성
+    const supabase = createClientComponentClient();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,11 +21,25 @@ export default function ForgotPasswordPage() {
         setError('');
 
         try {
-            // 실제 비밀번호 재설정 메일 발송 로직은 여기에 구현
-            await new Promise(resolve => setTimeout(resolve, 1000)); // 모의 API 호출
+            // Supabase Auth를 사용한 비밀번호 재설정 이메일 발송
+            const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/reset-password`,
+            });
+
+            if (resetError) {
+                throw resetError;
+            }
+
             setSuccess(true);
         } catch (err: any) {
-            setError(err.message || '비밀번호 재설정 이메일 발송 중 오류가 발생했습니다');
+            console.error('비밀번호 재설정 에러:', err);
+
+            // 에러 메시지 처리
+            if (err.message.includes('email') || err.message.includes('Email')) {
+                setError('이메일 형식이 올바르지 않거나 등록되지 않은 이메일입니다.');
+            } else {
+                setError(err.message || '비밀번호 재설정 이메일 발송 중 오류가 발생했습니다');
+            }
         } finally {
             setLoading(false);
         }
@@ -41,10 +58,10 @@ export default function ForgotPasswordPage() {
                     <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-5 rounded-md">
                         <h2 className="text-lg font-medium mb-2">이메일이 발송되었습니다</h2>
                         <p className="text-sm mb-4">
-                            {email}로 비밀번호 재설정 링크를 발송했습니다. 이메일을 확인하여 비밀번호를 재설정해주세요.
+                            <span className="font-medium">{email}</span>로 비밀번호 재설정 링크를 발송했습니다. 이메일을 확인하여 비밀번호를 재설정해주세요.
                         </p>
                         <p className="text-sm mb-4">
-                            이메일을 받지 못하셨나요? 스팸함을 확인하시거나 다시 시도해주세요.
+                            이메일을 받지 못하셨나요? 스팸함을 확인하시거나 몇 분 후에 다시 시도해주세요.
                         </p>
                         <div className="flex justify-center mt-4">
                             <Link
@@ -88,7 +105,11 @@ export default function ForgotPasswordPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-400 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                                    loading
+                                        ? 'bg-gray-400 cursor-not-allowed'
+                                        : 'bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+                                }`}
                             >
                                 {loading ? '처리 중...' : '비밀번호 재설정 이메일 보내기'}
                             </button>
