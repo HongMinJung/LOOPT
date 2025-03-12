@@ -1,13 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 
-export default function StyleGuideLayout({
-                                             children,
-}: {
+export default function StyleGuideLayout( {
+                                              children,
+                                          }: {
     children: React.ReactNode;
-}) {
-    return (
-        <div className="flex min-h-screen">
+} ) {
+    return (<div className="flex min-h-screen">
             <aside className="w-64 bg-gray-100 p-6">
                 <h1 className="text-xl font-bold mb-6">스타일 가이드</h1>
                 <nav className="space-y-2">
@@ -19,8 +18,7 @@ export default function StyleGuideLayout({
                 </nav>
             </aside>
             <main className="flex-1 p-10">
-                {children}
+                { children }
             </main>
-        </div>
-    );
+        </div>);
 }
